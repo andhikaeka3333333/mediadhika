@@ -40,6 +40,12 @@ class DrinkSeeder extends Seeder
                 'price' => 25.00,
                 'image_url' => 'https://www.tasteofhome.com/wp-content/uploads/2024/02/Copycat-McDonald-s-Iced-Coffee_EXPS_FT23_273351_ST_3_27_1.jpg',
             ],
+            [
+                'name' => 'Es Sirup',
+                'description' => 'Sirup ditambahkan es batu.',
+                'price' => 25.00,
+                'image_url' => 'https://images.tokopedia.net/img/cache/500-square/VqbcmM/2021/5/2/9eae2530-2052-49c6-a037-98f7b0d3e1cd.jpg',
+            ],
         ];
 
         foreach ($drinks as $drink) {
