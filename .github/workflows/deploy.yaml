@@ -36,6 +36,7 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
+          server-dir: "./htdocs/"
           timeout: 180000
           state-name: ftp-deploy-sync-state.json
           log-level: minimal
