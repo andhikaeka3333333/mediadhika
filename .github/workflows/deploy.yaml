@@ -16,12 +16,12 @@ jobs:
       - name: 🚚 Checkout code
         uses: actions/checkout@v4
 
-      - name: ⏬ Install laravel dependencies
+      - name: ⏬ Install Laravel dependencies
         uses: php-actions/composer@v6
         with:
           progress: yes
 
-      - name: 🔍 Check laravel dependencies installation
+      - name: 🔍 Check Laravel dependencies installation
         run: |
           if [ -d "./vendor" ]; then
             echo "✅ Laravel dependencies installed successfully."
@@ -30,13 +30,27 @@ jobs:
             exit 1
           fi
 
-      - name: 📂 Upload site to server
+      - name: 📂 Prepare files for InfinityFree
+        run: |
+          mkdir -p infinityfree-deploy
+          cp -R public/* infinityfree-deploy/
+          cp -R vendor infinityfree-deploy/
+          cp -R resources infinityfree-deploy/
+          cp -R bootstrap infinityfree-deploy/
+          cp -R storage infinityfree-deploy/
+          cp artisan infinityfree-deploy/
+          cp composer.json infinityfree-deploy/
+          cp composer.lock infinityfree-deploy/
+          echo "🎯 Files prepared for deployment."
+
+      - name: 📂 Upload site to InfinityFree server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          server-dir: "./htdocs/"
+          server-dir: "/htdocs/"
+          local-dir: "infinityfree-deploy"
           timeout: 180000
           state-name: ftp-deploy-sync-state.json
           log-level: minimal
@@ -45,3 +59,8 @@ jobs:
             **/.git*/**
             **/.env*
             **/.htaccess
+            storage/framework/cache/data/*
+            storage/logs/*
+
+      - name: ✅ Clean up temporary files
+        run: rm -rf infinityfree-deploy
