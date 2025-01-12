@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 jobs:
@@ -50,7 +50,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           server-dir: "/htdocs/"
-          local-dir: "infinityfree-deploy"
+          local-dir: "infinityfree-deploy/" # Wajib diakhiri dengan /
           timeout: 180000
           state-name: ftp-deploy-sync-state.json
           log-level: minimal
