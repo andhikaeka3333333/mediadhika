@@ -38,19 +38,26 @@ jobs:
           cp -R resources infinityfree-deploy/
           cp -R bootstrap infinityfree-deploy/
           cp -R storage infinityfree-deploy/
+          cp -R app infinityfree-deploy/  # Menambahkan folder app/ agar controller ikut terupload
           cp artisan infinityfree-deploy/
           cp composer.json infinityfree-deploy/
           cp composer.lock infinityfree-deploy/
           echo "🎯 Files prepared for deployment."
 
-      - name: 📂 Upload site to InfinityFree server
+      - name: 🔄 Clear cache
+        run: |
+          # Perintah untuk clear cache Laravel agar semua pengaturan terbaru diterapkan
+          php artisan config:clear
+          php artisan route:clear
+          php artisan cache:clear
+
+      - name: 📦 Upload site to server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          server-dir: "/htdocs/"
-          local-dir: "infinityfree-deploy/" # Wajib diakhiri dengan /
+          server-dir: "/htdocs/"  # Pastikan path ini sesuai dengan folder root Anda di InfinityFree
           timeout: 180000
           state-name: ftp-deploy-sync-state.json
           log-level: minimal
@@ -59,8 +66,6 @@ jobs:
             **/.git*/**
             **/.env*
             **/.htaccess
-            storage/framework/cache/data/*
-            storage/logs/*
 
-      - name: ✅ Clean up temporary files
-        run: rm -rf infinityfree-deploy
+      - name: ✅ Deployment completed
+        run: echo "Deployment to InfinityFree completed successfully!"
